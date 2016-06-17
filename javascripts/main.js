@@ -3,7 +3,6 @@ $(function() {
   var canvas = document.getElementById("canvas");
   var context = canvas.getContext("2d");
 
-
   var tX = 100;
   var tY = 100;
   var magX = 100;
@@ -14,22 +13,22 @@ $(function() {
     var x2 = point2.x;
     var y2 = point2.y;
     context.beginPath();
-    // context.moveTo(x1 + tX, y1 * 1 + tY);
-    // context.lineTo(x2 + tX, y2 * 1 + tY);
     context.moveTo(x1 * magX + tX, y1 + tY);
     context.lineTo(x2 * magX + tX, y2 + tY);
     context.stroke();
     context.closePath();
-    console.log(`point1: ${x1}, ${y1}; point2: ${x2}, ${y2}`);
+    // console.log(`point1: ${x1}, ${y1}; point2: ${x2}, ${y2}`);
   }
 
-  eX = (x, y) => Math.exp(x);
+  var eX = (x, y) => Math.exp(x);
+  var factorial = x => (x == 0 || x == 1) ? 1: x * factorial(x -1);
 
   var deltaX = .1;
   var minX = -10;
   var maxX = 10;
+  var numOfTerms = 1;
 
-  var graphFx = function(fX)
+  var graphFx = function(fX, color)
   {
     for (let x = minX; x < maxX; x += deltaX)
     {
@@ -37,16 +36,38 @@ $(function() {
       let x2 = x + deltaX;
       let y2 = fX(x + deltaX);
       drawLine({x, y}, {x: x2, y: y2});
+
+      let yA = approximateEX(numOfTerms, x);
+      let yA2 = approximateEX(numOfTerms, x2);
+      drawLine({x, y: yA}, {x: x2, y: yA2});
     }
   }
+  for (let i = 0; i < 10; i ++)
+  {
+    graphFx(eX);
+    numOfTerms ++;
+  }
 
-  graphFx(eX);
+  // setInterval(() => {
+  //   graphFx(eX)
+  //   numOfTerms ++;
+  //   }
+  //   , 100);
 
-
-
-
-
-
+  function approximateEX(n, x) //where n is the amount of desired terms
+  {
+    var y = 0;
+    for (var i = 0; i < n; i ++)
+    {
+      let num = Math.pow(x, i);
+      let den =   factorial(i);
+      let quot = num / den;
+      console.log(`numerator is ${num}, denominator is ${den}`);
+      console.log(`the ${i}th contribution of the series is ${quot}`);
+      y += quot;
+    }
+    return y;
+  }
 });
 
 
