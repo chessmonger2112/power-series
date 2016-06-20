@@ -6,7 +6,7 @@ $(function() {
   var tX = 100;
   var tY = 100;
   var magX = 100;
-  drawLine = function(point1, point2)
+  drawLine = function(point1, point2, color)
   {
     var x1 = point1.x;
     var y1 = point1.y;
@@ -15,9 +15,10 @@ $(function() {
     context.beginPath();
     context.moveTo(x1 * magX + tX, y1 + tY);
     context.lineTo(x2 * magX + tX, y2 + tY);
+    context.strokeStyle = color || "black";
+    // context.strokeStyle = "green";
     context.stroke();
     context.closePath();
-    // console.log(`point1: ${x1}, ${y1}; point2: ${x2}, ${y2}`);
   }
 
   var eX = (x, y) => Math.exp(x);
@@ -35,24 +36,21 @@ $(function() {
       let y = fX(x);
       let x2 = x + deltaX;
       let y2 = fX(x + deltaX);
-      drawLine({x, y}, {x: x2, y: y2});
+      drawLine({x, y}, {x: x2, y: y2}, color);
 
       let yA = approximateEX(numOfTerms, x);
       let yA2 = approximateEX(numOfTerms, x2);
       drawLine({x, y: yA}, {x: x2, y: yA2});
     }
   }
-  for (let i = 0; i < 10; i ++)
-  {
-    graphFx(eX);
-    numOfTerms ++;
-  }
 
-  // setInterval(() => {
-  //   graphFx(eX)
-  //   numOfTerms ++;
-  //   }
-  //   , 100);
+  function makeGraphs(n) {
+    for (let i = 0; i < n; i ++)
+    {
+      graphFx(eX, "red");
+      numOfTerms ++;
+    }
+  }
 
   function approximateEX(n, x) //where n is the amount of desired terms
   {
@@ -62,12 +60,18 @@ $(function() {
       let num = Math.pow(x, i);
       let den =   factorial(i);
       let quot = num / den;
-      console.log(`numerator is ${num}, denominator is ${den}`);
-      console.log(`the ${i}th contribution of the series is ${quot}`);
       y += quot;
     }
     return y;
   }
+
+  $("#goButton").click(function() {
+    var numOfTerms = parseInt($("#numOfTermsInput").val());
+    console.log(numOfTerms);
+    if (numOfTerms)
+    {
+      console.log("Sdfsdf");
+      makeGraphs(numOfTerms);
+    }
+  });
 });
-
-
